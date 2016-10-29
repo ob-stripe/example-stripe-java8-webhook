@@ -1,0 +1,12 @@
+{
+  "name": "Stripe webhook Java 8 example",
+  "description": "Stripe webhook example with Java 8",
+  "repository": "https://github.com/ob-stripe/example-stripe-java8-webhook",
+  "keywords": ["stripe", "webhook", "java"],
+  "env": {
+    "STRIPE_TEST_SECRET_KEY": {
+      "description": "Stripe test secret key -- find this at https://dashboard.stripe.com/account/apikeys (it'll look like sk_test_****)",
+      "required": true
+    }
+  }
+}
