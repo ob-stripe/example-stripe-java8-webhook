@@ -4,10 +4,6 @@
   "repository": "https://github.com/ob-stripe/example-stripe-java8-webhook",
   "keywords": ["stripe", "webhook", "java"],
   "env": {
-    "STRIPE_TEST_SECRET_KEY": {
-      "description": "Stripe test secret key -- find this at https://dashboard.stripe.com/account/apikeys (it'll look like sk_test_****)",
-      "required": true
-    },
     "STRIPE_ENDPOINT_SECRET": {
       "description": "Stripe webhook endpoint signing secret -- find this at https://dashboard.stripe.com/account/webhooks (it'll look like whsec_****)",
       "required": true

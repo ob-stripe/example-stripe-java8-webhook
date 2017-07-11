@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.http.HttpStatus;
 
-import com.stripe.exception.AuthenticationException;
-import com.stripe.exception.InvalidRequestException;
-import com.stripe.exception.StripeException;
+import com.google.gson.JsonSyntaxException;
+
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 
@@ -27,9 +27,6 @@ public final class ExampleStripeJava8Webhook {
     public static void main(final String[] args) throws IOException {
         Map<String, String> env = System.getenv();
 
-        // Retrieve Stripe secret API key
-        final String apiKey = env.get("STRIPE_TEST_SECRET_KEY");
-
         // Retrieve webhook endpoint's signing secret
         final String endpointSecret = env.get("STRIPE_ENDPOINT_SECRET");
 
@@ -38,20 +35,28 @@ public final class ExampleStripeJava8Webhook {
             port(Integer.parseInt(env.get("PORT")));
         }
 
-        // Set the secret API key
-        Stripe.apiKey = apiKey;
-
         post("/webhook", (request, response) -> {
             String payload = request.body();
             String sigHeader = request.headers("Stripe-Signature");
             Event event = null;
+
             try {
                 // Retrieve the request's body and parse it as JSON
                 event = Webhook.constructEvent(
                     payload, sigHeader, endpointSecret
                 );
+            } catch (JsonSyntaxException e) {
+                String error = "Error: invalid JSON payload (" + e.getMessage() + ")";
+                LOGGER.warn(error);
+                response.status(HttpStatus.SC_BAD_REQUEST);
+                return error;
+            } catch (SignatureVerificationException e) {
+                String error = "Error: signature verification failed (" + e.getMessage() + ")";
+                LOGGER.warn(error);
+                response.status(HttpStatus.SC_BAD_REQUEST);
+                return error;
             } catch (Exception e) {
-                String error = "Error: " + e.getMessage();
+                String error = "Error: unexpected exception " + e.getClass().getName() + " (" + e.getMessage() + ")\n";
                 LOGGER.warn(error);
                 response.status(HttpStatus.SC_BAD_REQUEST);
                 return error;
@@ -59,7 +64,7 @@ public final class ExampleStripeJava8Webhook {
 
             LOGGER.info("Received event: " + event.getId()
                         + ", type: " + event.getType()
-                        + ", user_id: " + event.getUserId());
+                        + ", account: " + event.getAccount());
 
             // Do something with event
 
