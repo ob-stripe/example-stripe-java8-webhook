@@ -2,7 +2,7 @@
 
 This is a simple example project illustrating how to implement a [Stripe webhooks endpoint](https://stripe.com/docs/webhooks).
 
-It will also [verify the events](https://stripe.com/docs/webhooks#verifying-events) by fetching them back from Stripe.
+It will also [verify the events](https://stripe.com/docs/webhooks#verifying-events) by using [Stripe's Java library](https://github.com/stripe/stripe-java) to check the events' signatures.
 
 ## Use with Heroku
 

@@ -46,17 +46,21 @@ public final class ExampleStripeJava8Webhook {
                     payload, sigHeader, endpointSecret
                 );
             } catch (JsonSyntaxException e) {
-                String error = "Error: invalid JSON payload (" + e.getMessage() + ")";
+                String error = "Error: invalid JSON payload ("
+                             + e.getMessage() + ")";
                 LOGGER.warn(error);
                 response.status(HttpStatus.SC_BAD_REQUEST);
                 return error;
             } catch (SignatureVerificationException e) {
-                String error = "Error: signature verification failed (" + e.getMessage() + ")";
+                String error = "Error: signature verification failed ("
+                             + e.getMessage() + ")";
                 LOGGER.warn(error);
                 response.status(HttpStatus.SC_BAD_REQUEST);
                 return error;
             } catch (Exception e) {
-                String error = "Error: unexpected exception " + e.getClass().getName() + " (" + e.getMessage() + ")\n";
+                String error = "Error: unexpected exception "
+                             + e.getClass().getName() + " ("
+                             + e.getMessage() + ")\n";
                 LOGGER.warn(error);
                 response.status(HttpStatus.SC_BAD_REQUEST);
                 return error;
